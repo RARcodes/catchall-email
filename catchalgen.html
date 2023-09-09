@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Generator</title>
+    <style>
+        body {
+            font-family: 'Visby Round CF', Arial, sans-serif;
+            background-color: #482980;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-transform: lowercase;
+        }
+
+        @font-face {
+            font-family: 'Visby Round CF';
+            src: url('Polly-Bold.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: 'Polly';
+            src: url('Polly-Bold.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        .header {
+            font-family: 'Polly', Arial, sans-serif;
+            font-size: 66px;
+            margin-bottom: 20px;
+        }
+
+        .container {
+            max-width: 400px;
+            padding: 30px;
+            background-color: #3e236e;
+            border-radius: 15px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .input-group label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #888;
+            border-radius: 5px;
+            background-color: #3A3B3C;
+            color: #fff;
+            font-family: 'Visby Round CF', Arial, sans-serif;
+        }
+
+        .email-list {
+            margin-top: 20px;
+        }
+
+        .email-list h3 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .email-list p {
+            margin: 0;
+            padding: 10px;
+            font-family: 'Visby Round CF', Arial, sans-serif;
+            background-color: #3A3B3C;
+            border-radius: 5px;
+            border: 1px solid #888;
+            margin-bottom: 5px;
+        }
+
+        .btn-generate {
+            background-color: #3e236e;
+            color: #fff;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-family: 'Visby Round CF', Arial, sans-serif;
+            text-transform: lowercase;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">Free Catchall Email</div>
+    <div class="container">
+        <h2>Email Generator</h2>
+        <div class="input-group">
+            <label for="email-count">Number of Emails:</label>
+            <input type="number" id="email-count" min="1" placeholder="Enter a number" required>
+        </div>
+        <div class="input-group">
+            <label for="domain">Domain:</label>
+            <input type="text" id="domain" placeholder="Enter your domain" required>
+        </div>
+        <button class="btn-generate" onclick="generateEmails()">Generate Emails</button>
+        <div class="email-list" id="email-list">
+            <h3>Generated Emails:</h3>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Faker/3.1.0/faker.min.js"></script>
+    <script>
+        const emailCountInput = document.getElementById('email-count');
+        const domainInput = document.getElementById('domain');
+        const emailList = document.getElementById('email-list');
+
+        function generateEmails() {
+            const emailCount = parseInt(emailCountInput.value);
+            const domain = domainInput.value;
+
+            if (isNaN(emailCount) || emailCount < 1) {
+                alert('Please enter a valid number.');
+                return;
+            }
+
+            emailList.innerHTML = '';
+
+            if (emailCount >= 30) {
+            let emails = '';
+            for (let i = 0; i < emailCount; i++) {
+                const randomFirstName = faker.name.firstName().toLowerCase();
+                const randomLastName = faker.name.lastName().toLowerCase();
+                const randomYearOrCombo = Math.random() < 0.5 ? faker.random.number({ min: 1950, max: 2004 }) : faker.random.alphaNumeric(2);
+                const email = `${randomFirstName}${randomLastName}${randomYearOrCombo}@${domain}`;
+                emails += email + '\n';
+            }
+
+            const blob = new Blob([emails], { type: 'text/plain' });
+
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'generated_emails.txt';
+            a.textContent = 'Download Emails';
+            a.style.textDecoration = 'none'; 
+            a.style.cursor = 'pointer'; 
+
+            a.addEventListener('click', () => {
+                a.click();
+            });
+
+            emailList.appendChild(a);
+        } else {
+            for (let i = 0; i < emailCount; i++) {
+                    const randomFirstName = faker.name.firstName().toLowerCase();
+                    const randomLastName = faker.name.lastName().toLowerCase();
+                    const randomYearOrCombo = Math.random() < 0.5 ? faker.random.number({ min: 1950, max: 2004 }) : faker.random.alphaNumeric(2);
+                    const email = `${randomFirstName}${randomLastName}${randomYearOrCombo}@${domain}`;
+                    const emailElement = document.createElement('p');
+                    emailElement.textContent = email;
+                    emailList.appendChild(emailElement);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
